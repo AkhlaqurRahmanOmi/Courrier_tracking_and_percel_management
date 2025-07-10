@@ -41,6 +41,13 @@ Users can book parcels, assign delivery agents, track parcels in real-time, and 
 
 ## Backend
 
+## Modules
+- Parcel Module
+- Auth Module
+- User Module
+- Tracking Module
+- Delivery Agent Module
+
 **Tech Stack:** Node.js + Express or NestJS + PostgreSQL/MongoDB + JWT
 
 ### APIs
