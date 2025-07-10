@@ -65,7 +65,7 @@ Users can book parcels, assign delivery agents, track parcels in real-time, and 
 - Google Maps Integration for tracking and route view
 
 
-## Advanced (Bonus)
+## Advanced Features
 
 - QR Code generation for parcels
 - Barcode scan by agents to confirm pickup/delivery
