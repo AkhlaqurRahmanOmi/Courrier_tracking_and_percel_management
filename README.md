@@ -65,7 +65,7 @@ Users can book parcels, assign delivery agents, track parcels in real-time, and 
 - Google Maps Integration for tracking and route view
 
 
-## Advanced (Bonus)
+## Advanced
 
 - QR Code generation for parcels
 - Barcode scan by agents to confirm pickup/delivery
@@ -73,21 +73,6 @@ Users can book parcels, assign delivery agents, track parcels in real-time, and 
 - Multi-language support (e.g., English \& Bengali)
 
 
-## Deliverables
-
-- GitHub repo with documentation
-- Hosted Web App (e.g., Vercel/Netlify)
-- Postman collection for backend API
-- Final PDF report + video demo
-
-
-## Evaluation Criteria
-
-- Functional completeness
-- Code structure and clean architecture
-- Responsive UI and UX polish
-- Real-time updates and geolocation handling
-- Real-world use cases like COD, failed deliveries, and reports
 
 <div style="text-align: center">⁂</div>
 
