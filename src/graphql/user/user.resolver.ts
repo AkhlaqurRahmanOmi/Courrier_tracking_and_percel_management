@@ -3,6 +3,7 @@ import { Inject } from '@nestjs/common';
 import { PubsubService } from '../../shared/pubsub/pubsub.service';
 import { CreateUserInput } from './dto/user.create.dto';
 import { UserDTO } from './dto/user.dto';
+import { updateUserInput } from './dto/update.user.dto';
 import { UserService } from '../../modules/user/user.service';
 import { plainToInstance } from 'class-transformer';
 
@@ -23,7 +24,7 @@ export class UserResolver {
   }
 
   @Query(() => UserDTO, { nullable: true })
-  async user(@Args('id') id: number) {
+  async user(@Args('id') id: string) {
     const result = await this.userService.getUserById(id);
     if (!result.success || !result.data) {
       return null;
@@ -42,8 +43,8 @@ export class UserResolver {
 
   @Mutation(() => UserDTO)
   async updateUser(
-    @Args('id') id: number,
-    @Args('input') input: CreateUserInput,
+    @Args('id') id: string,
+    @Args('input') input: updateUserInput,
   ) {
     const result = await this.userService.updateUser(id, input);
     if (!result.success || !result.data) {
@@ -53,7 +54,7 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteUser(@Args('id') id: number) {
+  async deleteUser(@Args('id') id: string) {
     const result = await this.userService.deleteUser(id);
     if (!result.success) {
       throw new Error(result.error?.message || `Failed to delete user with id ${id}`);

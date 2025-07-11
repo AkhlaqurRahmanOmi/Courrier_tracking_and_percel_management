@@ -1,21 +1,108 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+model Permission {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roleIds   String[] @db.ObjectId
+  roles     Role[]   @relation(fields: [roleIds], references: [id])
+}
+
+model Role {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  name          String       @unique
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  users         User[]
+  permissionIds String[]     @db.ObjectId
+  permissions   Permission[] @relation(fields: [permissionIds], references: [id])
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String
-  password  String
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  email           String   @unique
+  password        String
+  firstName       String?
+  lastName        String?
+  phone           String?  @unique
+  role            Role?    @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  roleId          String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  parcels         Parcel[] @relation("CustomerParcels")
+  assignedParcels Parcel[] @relation("DeliveryAgentParcels")
+
+  @@index([roleId])
+}
+
+model Parcel {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  trackingId      String       @unique
+  pickupAddress   String
+  deliveryAddress String
+  parcelType      String
+  parcelSize      String
+  status          ParcelStatus @default(PENDING)
+  pickupTime      DateTime?
+  deliveryTime    DateTime?
+  customer        User         @relation("CustomerParcels", fields: [customerId], references: [id], onDelete: Restrict)
+  customerId      String       @db.ObjectId
+  deliveryAgent   User?        @relation("DeliveryAgentParcels", fields: [deliveryAgentId], references: [id], onDelete: SetNull)
+  deliveryAgentId String?      @db.ObjectId
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  locations       Location[]
+
+  @@index([customerId])
+  @@index([deliveryAgentId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Location {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  parcel    Parcel   @relation(fields: [parcelId], references: [id], onDelete: Cascade)
+  parcelId  String   @db.ObjectId
+  latitude  Float
+  longitude Float
+  timestamp DateTime @default(now())
+
+  @@index([parcelId])
+  @@index([timestamp])
+}
+
+enum ParcelStatus {
+  PENDING
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
+
+// Permission constants
+enum PermissionName {
+  PARCEL_CREATE
+  PARCEL_READ
+  PARCEL_UPDATE
+  PARCEL_DELETE
+  USER_CREATE
+  USER_READ
+  USER_UPDATE
+  USER_DELETE
+  ROLE_CREATE
+  ROLE_READ
+  ROLE_UPDATE
+  ROLE_DELETE
 }
